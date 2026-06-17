@@ -1,0 +1,10 @@
+{
+  "network": "testnet",
+  "rpcUrl": "https://fullnode.testnet.sui.io:443",
+  "packageId": "0xa91c711fe09a79f7306fa86377051abfdacd3fa4e2bb89d06ff74ddf2953fb89",
+  "registryId": "0x558d762df929740ef5d48aa5384a95cad443f503c1706a2199501f1083c98ca9",
+  "publisherUrl": "https://publisher.walrus-testnet.walrus.space",
+  "aggregatorUrl": "https://aggregator.walrus-testnet.walrus.space",
+  "namespace": "tusk-demo-78d7f1fb",
+  "updatedAt": "2026-06-17T10:01:29.825Z"
+}

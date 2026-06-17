@@ -4,11 +4,11 @@
   "private": true,
   "description": "Tusk: decentralized agent memory on Walrus + Sui",
   "scripts": {
-    "demo": "ts-node apps/demo/demo.ts"
+    "demo": "pnpm --filter demo run demo",
+    "demo:fallback": "pnpm --filter demo run fallback"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
-    "ts-node": "^10.9.2",
     "typescript": "^5.5.0"
   }
 }
