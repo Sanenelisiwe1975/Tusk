@@ -1,13 +1,16 @@
+import { useMemo } from "react";
 import { useCoordination } from "../hooks/useCoordination";
+import { entriesAsOf, tasksAsOf } from "../lib/replay";
 import { KanbanBoard } from "./coordination/KanbanBoard";
 import { RunGraph } from "./coordination/RunGraph";
 
 interface Props {
   namespace: string | null;
   onNavigate: (id: string) => void;
+  checkpoint?: number | null;
 }
 
-export function CoordinationPane({ namespace, onNavigate }: Props) {
+export function CoordinationPane({ namespace, onNavigate, checkpoint }: Props) {
   return (
     <div className="pane">
       <header className="pane-header">
@@ -21,7 +24,11 @@ export function CoordinationPane({ namespace, onNavigate }: Props) {
             <p className="pane-placeholder-label">Select a run from the sidebar</p>
           </div>
         ) : (
-          <CoordinationContent namespace={namespace} onNavigate={onNavigate} />
+          <CoordinationContent
+            namespace={namespace}
+            onNavigate={onNavigate}
+            checkpoint={checkpoint ?? null}
+          />
         )}
       </div>
     </div>
@@ -31,11 +38,26 @@ export function CoordinationPane({ namespace, onNavigate }: Props) {
 function CoordinationContent({
   namespace,
   onNavigate,
+  checkpoint,
 }: {
   namespace: string;
   onNavigate: (id: string) => void;
+  checkpoint: number | null;
 }) {
-  const { byStatus, goals, tasks, isLoading } = useCoordination(namespace);
+  const { goals: liveGoals, tasks: liveTasks, isLoading } = useCoordination(namespace);
+
+  const goals = checkpoint === null ? liveGoals : entriesAsOf(liveGoals, checkpoint);
+  const tasks = checkpoint === null ? liveTasks : tasksAsOf(liveTasks, checkpoint);
+
+  const byStatus = useMemo(
+    () => ({
+      pending: tasks.filter((t) => t.status === "pending"),
+      claimed: tasks.filter((t) => t.status === "claimed"),
+      done: tasks.filter((t) => t.status === "done"),
+      failed: tasks.filter((t) => t.status === "failed"),
+    }),
+    [tasks]
+  );
 
   if (isLoading) {
     return (

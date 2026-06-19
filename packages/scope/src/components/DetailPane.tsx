@@ -4,6 +4,7 @@ import { VerifyBadge } from "./detail/VerifyBadge";
 import { PayloadView } from "./detail/PayloadView";
 import { MetaBlock } from "./detail/MetaBlock";
 import { ChildrenList } from "./detail/ChildrenList";
+import { InjectPanel } from "./detail/InjectPanel";
 
 interface Props {
   namespace: string | null;
@@ -76,6 +77,7 @@ function DetailContent({
       <PayloadView entry={entry} namespace={namespace} />
       <MetaBlock entry={entry} onNavigate={onNavigate} />
       <ChildrenList namespace={namespace} parentId={entry.id} onNavigate={onNavigate} />
+      <InjectPanel namespace={namespace} parentId={entry.id} />
     </>
   );
 }

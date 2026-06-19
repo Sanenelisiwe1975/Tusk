@@ -1252,21 +1252,290 @@ button {
   grid-template-columns: 1fr 400px;
 }
 
-/* ── Deck view layout ────────────────────────────────────── */
+/* ── Full-width views (Diff, Deck) ───────────────────────── */
 
-/* Deck expands to fill main + detail columns */
-.app-shell--deck .app-detail {
+/* These views have no per-entry detail to show — expand main to fill
+   the main + detail columns instead. */
+.app-shell--full .app-detail {
   display: none;
 }
 
 /* In normal (non-present) mode, main starts at column 2 */
-.app-shell--deck .app-main {
+.app-shell--full .app-main {
   grid-column: 2 / -1;
 }
 
 /* In present mode the grid only has 2 cols; span all of them */
-.app-shell--present.app-shell--deck .app-main {
+.app-shell--present.app-shell--full .app-main {
   grid-column: 1 / -1;
+}
+
+/* ── Replay bar ──────────────────────────────────────────── */
+
+.replay-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-raised);
+  flex-shrink: 0;
+}
+
+.replay-status {
+  font-family: var(--font-mono);
+  font-size: var(--sz-2xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.replay-status--live {
+  color: var(--kind-result);
+}
+
+.replay-slider {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--accent);
+  height: 4px;
+  cursor: pointer;
+}
+
+.replay-count,
+.replay-clock {
+  font-family: var(--font-mono);
+  font-size: var(--sz-xs);
+  color: var(--text-3);
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.replay-live-btn {
+  font-size: var(--sz-xs);
+  color: var(--text-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 3px 9px;
+  background: transparent;
+  cursor: pointer;
+  transition: color 80ms, border-color 80ms, background 80ms;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.replay-live-btn:hover:not(:disabled) {
+  color: var(--accent-text);
+  border-color: var(--accent-muted);
+  background: var(--accent-dim);
+}
+
+.replay-live-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ── Diff pane ───────────────────────────────────────────── */
+
+.diff-pane-body {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.diff-pane {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.diff-pickers {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.diff-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.diff-picker-label {
+  font-size: var(--sz-2xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.diff-select {
+  font-size: var(--sz-sm);
+  color: var(--text);
+  background: var(--bg-overlay);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 6px 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.diff-vs {
+  font-size: var(--sz-xs);
+  color: var(--text-3);
+  flex-shrink: 0;
+  padding-bottom: 8px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.diff-empty {
+  flex: 1;
+}
+
+.diff-headers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.diff-entry-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-right: 1px solid var(--border);
+  min-width: 0;
+}
+
+.diff-entry-header:last-child {
+  border-right: none;
+}
+
+.diff-entry-author {
+  font-size: var(--sz-sm);
+  font-weight: 500;
+  color: var(--text);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.diff-rows {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.diff-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.diff-cell {
+  font-family: var(--font-mono);
+  font-size: var(--sz-xs);
+  color: var(--text-2);
+  padding: 1px 16px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-right: 1px solid var(--border);
+  line-height: 1.6;
+}
+
+.diff-cell:last-child {
+  border-right: none;
+}
+
+.diff-cell--removed {
+  background: var(--verify-fail-bg);
+  color: var(--verify-fail);
+}
+
+.diff-cell--added {
+  background: var(--verify-ok-bg);
+  color: var(--verify-ok);
+}
+
+.diff-cell--empty {
+  background: var(--bg);
+}
+
+.diff-row-empty {
+  padding: 24px 16px;
+  font-size: var(--sz-sm);
+  color: var(--text-3);
+  text-align: center;
+}
+
+/* ── Inject panel (memory-backend only) ─────────────────── */
+
+.inject-panel {
+  background: var(--bg-overlay);
+}
+
+.inject-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inject-author {
+  font-size: var(--sz-xs);
+  font-family: var(--font-mono);
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 5px 8px;
+}
+
+.inject-text {
+  font-size: var(--sz-sm);
+  font-family: var(--font-ui);
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 7px 8px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.inject-submit {
+  align-self: flex-end;
+  font-size: var(--sz-xs);
+  color: var(--accent-text);
+  border: 1px solid var(--accent-muted);
+  background: var(--accent-dim);
+  border-radius: var(--r);
+  padding: 5px 12px;
+  transition: opacity 80ms;
+}
+
+.inject-submit:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.inject-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* ── Deck component ──────────────────────────────────────── */

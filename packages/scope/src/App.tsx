@@ -3,10 +3,15 @@ import { Sidebar } from "./components/Sidebar";
 import { TimelinePane } from "./components/TimelinePane";
 import { DetailPane } from "./components/DetailPane";
 import { CoordinationPane } from "./components/CoordinationPane";
+import { DiffPane } from "./components/DiffPane";
 import { DeckSlides } from "./components/DeckSlides";
+import { ReplayBar } from "./components/ReplayBar";
 import { useNamespaces } from "./hooks/useNamespaces";
 
-type View = "timeline" | "coordination" | "deck";
+type View = "timeline" | "coordination" | "diff" | "deck";
+
+// Views that need the full main+detail width — no per-entry detail to show.
+const FULL_WIDTH_VIEWS: ReadonlySet<View> = new Set(["diff", "deck"]);
 
 const PRESENT_MODE =
   (import.meta.env["VITE_TUSK_PRESENT"] as string | undefined) === "1";
@@ -15,6 +20,7 @@ export function App() {
   const [selectedNs, setSelectedNs] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<View>("timeline");
+  const [checkpoint, setCheckpoint] = useState<number | null>(null);
   const { data: namespaces = [] } = useNamespaces();
 
   useEffect(() => {
@@ -26,6 +32,7 @@ export function App() {
   function handleSelectNs(ns: string) {
     setSelectedNs(ns);
     setSelectedId(null);
+    setCheckpoint(null);
   }
 
   function handleNavigateToEntry(id: string) {
@@ -33,10 +40,13 @@ export function App() {
     setActiveView("timeline");
   }
 
+  const isFullWidth = FULL_WIDTH_VIEWS.has(activeView);
+  const showReplayBar = activeView === "timeline" || activeView === "coordination";
+
   const shellClass = [
     "app-shell",
     PRESENT_MODE ? "app-shell--present" : "",
-    activeView === "deck" ? "app-shell--deck" : "",
+    isFullWidth ? "app-shell--full" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -74,6 +84,15 @@ export function App() {
           <button
             type="button"
             role="tab"
+            aria-selected={activeView === "diff" ? "true" : "false"}
+            className={`view-tab${activeView === "diff" ? " view-tab--active" : ""}`}
+            onClick={() => setActiveView("diff")}
+          >
+            Diff
+          </button>
+          <button
+            type="button"
+            role="tab"
             aria-selected={activeView === "deck" ? "true" : "false"}
             className={`view-tab${activeView === "deck" ? " view-tab--active" : ""}`}
             onClick={() => setActiveView("deck")}
@@ -82,24 +101,31 @@ export function App() {
           </button>
         </div>
 
+        {showReplayBar && (
+          <ReplayBar namespace={selectedNs} checkpoint={checkpoint} onChange={setCheckpoint} />
+        )}
+
         {activeView === "timeline" && (
           <TimelinePane
             namespace={selectedNs}
             selectedId={selectedId}
             onSelect={setSelectedId}
             presentMode={PRESENT_MODE}
+            checkpoint={checkpoint}
           />
         )}
         {activeView === "coordination" && (
           <CoordinationPane
             namespace={selectedNs}
             onNavigate={handleNavigateToEntry}
+            checkpoint={checkpoint}
           />
         )}
+        {activeView === "diff" && <DiffPane namespace={selectedNs} />}
         {activeView === "deck" && <DeckSlides />}
       </main>
 
-      {activeView !== "deck" && (
+      {!isFullWidth && (
         <aside className="app-detail">
           <DetailPane
             namespace={selectedNs}

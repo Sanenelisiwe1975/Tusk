@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTimeline } from "../hooks/useTimeline";
 import { useVerifyAll } from "../hooks/useVerify";
+import { entriesAsOf } from "../lib/replay";
 import { EntryRow } from "./timeline/EntryRow";
 import { SimulateButton } from "./timeline/SimulateButton";
 
@@ -9,9 +10,10 @@ interface Props {
   selectedId: string | null;
   onSelect: (id: string) => void;
   presentMode?: boolean;
+  checkpoint?: number | null;
 }
 
-export function TimelinePane({ namespace, selectedId, onSelect, presentMode }: Props) {
+export function TimelinePane({ namespace, selectedId, onSelect, presentMode, checkpoint }: Props) {
   if (!namespace) {
     return (
       <div className="pane-empty">
@@ -26,6 +28,7 @@ export function TimelinePane({ namespace, selectedId, onSelect, presentMode }: P
       selectedId={selectedId}
       onSelect={onSelect}
       presentMode={presentMode}
+      checkpoint={checkpoint ?? null}
     />
   );
 }
@@ -35,22 +38,26 @@ function TimelineContent({
   selectedId,
   onSelect,
   presentMode,
+  checkpoint,
 }: {
   namespace: string;
   selectedId: string | null;
   onSelect: (id: string) => void;
   presentMode?: boolean;
+  checkpoint: number | null;
 }) {
-  const { entries, highlightedIds, isLoading, liveCount } = useTimeline(namespace);
+  const { entries: liveOrderedEntries, highlightedIds, isLoading, liveCount } = useTimeline(namespace);
+  const entries =
+    checkpoint === null ? liveOrderedEntries : entriesAsOf(liveOrderedEntries, checkpoint);
   const [verifying, setVerifying] = useState(false);
   const verifyAll = useVerifyAll();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (liveCount > 0) {
+    if (liveCount > 0 && checkpoint === null) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [liveCount]);
+  }, [liveCount, checkpoint]);
 
   async function handleVerifyAll() {
     setVerifying(true);
