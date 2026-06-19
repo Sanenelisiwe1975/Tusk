@@ -1,11 +1,9 @@
-import React from "react";
-import { MemoryEntry } from "../core/schema";
+import type { MemoryEntry } from "@tusk/core";
 
 export interface TimelineProps {
   entries: MemoryEntry[];
 }
 
-/// Renders the chronological sequence of memory writes for a namespace.
 export function Timeline({ entries }: TimelineProps) {
   return (
     <ol>

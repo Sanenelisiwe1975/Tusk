@@ -3,7 +3,7 @@ import { getStore } from "../adapters/memoryStore";
 
 export function useEntries() {
     return useQuery ({
-        queryKey: ["entires"],
+        queryKey: ["entries"],
         queryFn: () => getStore().list()
     });
 }

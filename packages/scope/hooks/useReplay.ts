@@ -7,7 +7,7 @@ export function useReplay() {
   const [timestamp, setTimestamp] = useState(Date.now());
   
   const visibleEntries = useMemo(
-    () => data.filters((e) => e.createdAt <= timestamp), [data, timestamp] 
+    () => data.filter((e) => e.createdAt <= timestamp), [data, timestamp]
   );
 
 

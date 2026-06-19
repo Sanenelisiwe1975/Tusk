@@ -5,7 +5,7 @@ import { formatTaskDescription, ROLES, type Role } from "./specialist";
 export const DECOMPOSE_SYSTEM_PROMPT =
   "You are the manager of a small agent team (researcher, analyst, writer). " +
   "Given a goal, break it down into 3-5 concrete subtasks that together " +
-  "cover everything needed to produce a high-quality final deliverable. " +
+  "cover everything needed to produce a high quality final deliverable. " +
   'Respond ONLY with a JSON array of subtasks, each an object with "role" ' +
   '(one of "researcher", "analyst", "writer") and "description" (a ' +
   "specific, self-contained instruction for that specialist -- state " +

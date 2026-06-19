@@ -1,12 +1,3 @@
-import type { MemoryStore } from "@tusk/core";
-import { store } from "./mock";
-
-let activeStore: MemoryStore = store;
-
-export function getStore() {
-  return activeStore;
-}
-
-export function setStore(store: MemoryStore) {
-  activeStore = store;
-}
+// Re-exports the canonical store accessor so existing hooks (built in B2–B5)
+// can import from this path without needing to change their import statements.
+export { getStore } from "../src/store/source";

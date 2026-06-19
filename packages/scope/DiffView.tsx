@@ -1,17 +1,15 @@
-import React from "react";
-import { MemoryEntry } from "../core/schema";
+import type { MemoryEntry } from "@tusk/core";
 
 export interface DiffViewProps {
   before: MemoryEntry;
   after: MemoryEntry;
 }
 
-/// Shows what changed between two versions of a memory entry.
 export function DiffView({ before, after }: DiffViewProps) {
   return (
     <div>
-      <pre>{before.contentHash}</pre>
-      <pre>{after.contentHash}</pre>
+      <pre>{before.hash}</pre>
+      <pre>{after.hash}</pre>
     </div>
   );
 }

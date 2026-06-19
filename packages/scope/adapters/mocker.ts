@@ -1,22 +1,8 @@
-import { InMemoryStore } from "@tusk/core";
+import { InMemoryStore, seed } from "@tusk/core";
+import type { MemoryStore } from "@tusk/core";
 
-export const store = new InMemoryStore();
-
-await store.write({
-  namespace: "research",
-  author: "research-agent",
-  payload: {
-    kind: "note",
-    text: "Initial research"
-  }
-});
-
-await store.write({
-  namespace: "research",
-  author: "review-agent",
-  parentId: "entry-1",
-  payload: {
-    kind: "review",
-    text: "Looks good"
-  }
-});
+export async function createSeededStore(): Promise<MemoryStore> {
+  const store = new InMemoryStore();
+  await seed(store, "demo");
+  return store;
+}

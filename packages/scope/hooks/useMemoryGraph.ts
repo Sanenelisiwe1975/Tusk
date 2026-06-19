@@ -3,15 +3,10 @@ import { useEntries } from "./useEntries";
 export function useMemoryGraph() {
   const { data = [] } = useEntries();
 
-  const nodes = data.map((entry) => ({
+  const nodes = data.map((entry, i) => ({
     id: entry.id,
-    data: {
-      label: entry.author
-    },
-    position: {
-      x: Math.random() * 500,
-      y: Math.random() * 500
-    }
+    data: { label: `${entry.author} · ${entry.kind}` },
+    position: { x: (i % 4) * 220, y: Math.floor(i / 4) * 120 },
   }));
 
   const edges = data
