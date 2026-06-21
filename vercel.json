@@ -1,0 +1,5 @@
+{
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm --filter @tusk/scope run build",
+  "outputDirectory": "packages/scope/dist"
+}
