@@ -15,11 +15,15 @@ export async function initStore(): Promise<void> {
       const ws = buildWalrusStore();
       // Probe the network before committing. Any namespace is fine — an empty
       // result means "reachable but no entries", which is still a success.
+      // WalrusStore.list() repaginates the full on-chain event history on
+      // every call (per DEMO.md) — observed up to ~45s for a single call in
+      // the live integration suite. A short timeout here doesn't distinguish
+      // "down" from "just slow," so it must be generous, not snappy.
       const probeNs = viteEnv("VITE_TUSK_DEMO_NAMESPACE") ?? "demo";
       await Promise.race([
         ws.list({ namespace: probeNs }),
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("Walrus probe timed out after 5 s")), 5000)
+          setTimeout(() => reject(new Error("Walrus probe timed out after 60 s")), 60_000)
         ),
       ]);
       _store = ws;
